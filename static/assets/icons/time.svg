@@ -1,0 +1,22 @@
+<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="19" height="19" fill="#1E1E1E"/>
+<g id="dashboard">
+<rect width="1920" height="1080" transform="translate(-1590 -77)" fill="url(#paint0_linear_1_2)"/>
+<g id="Group 14">
+<rect id="Rectangle 6" x="-27" y="-26" width="136.4" height="69.6667" rx="34.8333" fill="#3F3F3F" fill-opacity="0.26"/>
+<g id="Frame" clip-path="url(#clip0_1_2)">
+<path id="Vector" d="M0.224479 0.491569H18.3745V18.6416H0.224479V0.491569Z" stroke="#131313" stroke-width="0.183333"/>
+<path id="Vector_2" d="M9.58932 9.7576V9.80979L9.63421 9.83643L12.9919 11.8287L12.5147 12.6113L8.62682 10.2786V5.83885H9.58932V9.7576ZM1.75182 9.56662C1.75182 5.40046 5.12549 2.0194 9.29141 2.0194C13.4651 2.0194 16.8463 5.40064 16.8463 9.56662C16.8463 13.7326 13.4651 17.1138 9.29141 17.1138C5.12549 17.1138 1.75182 13.7328 1.75182 9.56662ZM3.09627 9.56662C3.09627 12.9936 5.87203 15.7694 9.29905 15.7694C12.7261 15.7694 15.5018 12.9936 15.5018 9.56662C15.5018 6.13961 12.7261 3.36385 9.29905 3.36385C5.87203 3.36385 3.09627 6.13961 3.09627 9.56662Z" fill="white" stroke="#131313" stroke-width="0.183333"/>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_1_2" x1="1920" y1="0" x2="-4.55976e-05" y2="1080" gradientUnits="userSpaceOnUse">
+<stop stop-color="#202020"/>
+<stop offset="1"/>
+</linearGradient>
+<clipPath id="clip0_1_2">
+<rect width="18.3333" height="18.3333" fill="white" transform="translate(0.132812 0.399902)"/>
+</clipPath>
+</defs>
+</svg>
