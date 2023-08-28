@@ -37,27 +37,108 @@
       <div class="dash-section-one">
         <div class="dash-title"><p id="dash-title">Dashboard / Systummmm</p></div>
         <div class="dash-actions">
-          <div class="dash-search">
-            <div id="dash-search-icon">
-              <img src="/static/assets/icons/search.svg" class="dash-search-img" alt="">
+          <div class="actns">
+            <div class="dash-search">
+              <div id="dash-search-icon">
+                <img src="/static/assets/icons/search.svg" class="dash-search-img" alt="">
+              </div>
+              <input type="text" placeholder="Type something..." id="search-input">
             </div>
-            <input type="text" placeholder="Type something..." id="search-input">
-          </div>
-          <div class="dash-time">
-            <div id="dash-time">
-              <img src="/static/assets/icons/time.svg" id="dash-time-icon" alt="">
-              <p id="dash-time-txt"></p>
+            <div class="dash-time">
+              <div id="dash-time">
+                <img src="/static/assets/icons/time.svg" id="dash-time-icon" alt="">
+                <p id="dash-time-txt"></p>
+              </div>
             </div>
-          </div>
-          <div class="dash-alert" onclick="alert()">
-
-          </div>
-          <div class="dash-notif">
-
+            <div class="dash-alert" onclick="Alert()">
+                <img src="/static/assets/icons/alert.svg" class="actions-img" alt="">
+            </div>
+            <div class="dash-notif">
+              <img src="/static/assets/icons/notification.svg" class="actions-img" alt="">
+            </div>
           </div>
         </div>
       </div>
-      <div class="dash-section-two"></div>
+      <div id="dash-main">
+        <div class="dash-section-two">
+          <div class="training">
+            <div class="training-title">
+              <p id="training-title">TRAINING</p>
+            </div>
+            <div class="training-level">
+              <p id="training-level">4</p>
+            </div>
+            <div class="training-modules"></div>
+          </div>
+          <div class="dash-nearby">
+            <img src="/static/assets/nearby.png" id="dash-nearby" alt="">
+          </div>
+        </div>
+        <div class="dash-section-three">
+          <div class="dash-files">
+            <div class="file-nav">
+              <div class="file-title">
+                <div class="dash-file-icon">
+                  <img src="/static//assets/icons/file.svg" id="dash-file-icon" alt="">
+                </div>
+                <p id="file-title">your files</p>
+              </div>
+              <div class="file-actions">
+                <img src="/static/assets/icons/grid.svg" class="file-action" alt="">
+                <img src="/static/assets/icons/addfile.svg" class="file-action" alt="">
+              </div>
+            </div>
+            <div class="files">
+              <div class="file-main">
+                <div class="file-details">
+                  <div class="file-info">
+                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
+                    <p class="dash-filename">filename.mp3</p>
+                  </div>
+                </div>
+                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
+              </div>
+              <div class="file-main">
+                <div class="file-details">
+                  <div class="file-info">
+                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
+                    <p class="dash-filename">filename.mp3</p>
+                  </div>
+                </div>
+                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
+              </div>
+              <div class="file-main">
+                <div class="file-details">
+                  <div class="file-info">
+                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
+                    <p class="dash-filename">filename.mp3</p>
+                  </div>
+                </div>
+                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="dash-missionss">
+            <div class="dash-missions">
+              <button class="missions-navbtn">
+                <img src="/static/assets/icons/arow.svg" class="mission-navbtn" alt="">
+              </button>
+              <div class="dash-mission">
+                <div id="mission-top">
+                  <div class="mission-title">
+                    <p id="mission-title">On Going Missions</p>
+                  </div>
+                  <img src="/static/assets/icons/addfile.svg" id="reqmision-btn" alt="">
+                </div>
+              </div>
+              <button class="missions-navbtn">
+                <img src="/static/assets/icons/arow.svg" style="rotate: 180deg;" class="mission-navbtn" alt="">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 </body>
 </html>
