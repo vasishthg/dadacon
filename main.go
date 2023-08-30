@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -107,6 +108,13 @@ func main() {
 	})
 
 	router.GET("/chat", func(c *gin.Context) {
+		type Message struct {
+			ID        int    `json:"id"`
+			Sender    string `json:"sender"`
+			Receiver  string `json:"receiver"`
+			Message   string `json:"message"`
+			Timestamp time.Time
+		}
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
 		if session.Get("loggedin") != true {
@@ -115,6 +123,7 @@ func main() {
 		}
 		c.HTML(http.StatusOK, "chat.html", gin.H{})
 	})
+
 	router.GET("/map", func(c *gin.Context) {
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
