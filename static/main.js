@@ -176,4 +176,12 @@ $(".cipher-submit").click(function(){
         }
     }
 })
+
+$(".mission-viewmore").click(function(){
+    $(".missions-fullscreen").fadeIn();
+})
+
+$(".fbg").click(function(){
+    $(".missions-fullscreen").fadeOut()
+})
 setInterval(myFunction, 100); 

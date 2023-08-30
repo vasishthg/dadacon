@@ -1672,6 +1672,7 @@ a{
   backdrop-filter: blur(8px);
   left: 0;
   top: 0;
+  display: none;
   right: 0;
   bottom: 0;
   z-index: 50;
@@ -1680,8 +1681,18 @@ a{
 
 .dash-missions-full{
   display: grid;
+  z-index: 199;
   column-gap: .5em;
   grid-template-columns: 6% auto 6%;
+}
+
+.fbg{
+  position: absolute;
+  z-index: 150;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .dash-missionss-full{
@@ -1689,6 +1700,7 @@ a{
   display: inline-block;
   position: relative;
   position: absolute;
+  z-index: 199;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -1970,4 +1982,20 @@ background: rgba(31, 31, 31, 0.26);
 
 .mission-location-3{
   width: auto;
+}
+
+.qwiejqwioee{
+  border-radius: 58.887px;
+  background: rgba(255, 255, 255, 0.26);
+  width: 9em;
+  height: 3em;  
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  font-size: .6em;
+  right: 1.5em;
+  bottom: 1em;
+  outline: none;
+  color: white;
+  font-family: 'Satoshi-Medium';
 }
