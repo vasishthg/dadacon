@@ -604,7 +604,6 @@ margin-top: 1em;
   width: 27em;
   position: relative;
   display: grid;border: 0.4px solid #2C2C2C;
-
   grid-template-columns: auto auto;
   margin-top: 1em;
   height: 4.5em;
@@ -780,6 +779,7 @@ html{
 .m-align-full{
   position: absolute;
   top: 50%;
+  margin-left: 2em;
   transform: translateY(-50%);
 }
 .mission-viewmore{
@@ -1700,7 +1700,7 @@ a{
   height: 40em;
   border-radius: 10em;
   position: relative;border: 0.1px solid #2b2b2b;
-  background: #0f0f0fa9;
+  background: #0f0f0f;
   backdrop-filter: blur(31.548269271850586px);
 
 }
@@ -1710,7 +1710,8 @@ a{
 }
 
 .dash-mission-full{
-background: #0f0f0fd4;
+  border: 0.1px solid #2b2b2b;
+background: #0f0f0f;
 border-radius: 1.5em;
 backdrop-filter: blur(31.548269271850586px)
 }
@@ -1743,24 +1744,24 @@ margin-top: 1em;
 
 .full-mission-details-1{
   background: rgba(31, 31, 31, 0.26);
-  width: 33em;
+  width: 38em;
   position: relative;
   display: grid;
   grid-template-columns: auto auto;
-  height: 5em;
+  height: 7em;
   border-radius: 4em;
-  margin-left: -3em;
+  margin-left: -5em;
 }
 
 .mission-details-2-full{
   background: rgba(31, 31, 31, 0.26);
-  width: 27em;
+  width: 35em;
   position: relative;
   display: grid;
 
   grid-template-columns: auto auto;
   margin-top: 1em;
-  height: 4.5em;
+  height: 5.5em;
   border-radius: 4em;
   margin-left: 5em;
 }
@@ -1768,8 +1769,8 @@ margin-top: 1em;
 .mission-steps-full{
   display: grid;
   grid-template-columns: auto auto auto;
-  margin-left: 1.5em;
-  column-gap: 2.3em;
+  margin-left: 0.5em;
+  column-gap: 3em;
   margin-right: 1.5em;
 }
 html{
@@ -1796,7 +1797,7 @@ html{
   font-family: 'satoshi-medium';
   line-height: normal;
   font-weight: 500;
-  font-size: .5em;
+  font-size: .7em;
   margin-block-start: .85em;
 }
 
@@ -1806,7 +1807,7 @@ html{
   display: inline-block;
   vertical-align: middle;
   border-radius: 50%;
-  margin-left: 1.5em;
+  margin-left: 2em;
 }
 .m-agent-collaborator-full{
   margin-left: -1.5em;
@@ -1834,6 +1835,139 @@ html{
   font-size: .6em;
   font-weight: 400;
   width: 30em;
+  margin-left: 1em;
   line-height: normal;
 }
 
+.mission-details-3-full{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  position: relative;
+  margin-top: 2em;
+}
+
+.mission-details-3-time{
+  width: 11em;
+  height: 4.5em;
+  position: relative;
+  border-radius: 107.057px;
+background: rgba(31, 31, 31, 0.26);
+}
+
+.md-3-time{
+  width: 1.5em;
+  position: absolute;
+  top: 50%;
+  left: 2em;
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-50%);
+}
+
+.md-3-time-txt{
+  display: inline-block;
+  vertical-align: middle;
+  font-family: 'Satoshi-Regular';
+  position: absolute;
+  top: 50%;
+  margin-block-start: 0;
+  transform: translateY(-50%);
+  left: 50%;
+}
+
+.md-3-sys{
+  display: grid;
+  grid-template-rows: auto auto;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.mission-details-3-prog{
+  display: grid;
+  grid-template-columns: auto auto;
+  position: relative;
+  height: 4.5em;
+  margin-left: 3em;
+}
+
+.md-3-title{
+  font-family: 'Satoshi-Light';
+  font-size: 1.3em;
+  margin-block-end: -.25em;
+  margin-block-start: .75em;
+}
+
+.progressbar{
+  -webkit-appearance: none;
+   appearance: none;
+color: white;
+  width: 11em;
+  border-radius: 1em;
+  height: .20em;
+  background-color: #393939;
+}
+
+
+.progressbar::-webkit-progress-bar{
+  background-color: #393939;
+  border-radius: 1em;
+  height: .20em;
+}
+.progressbar::-webkit-progress-value{
+  background-color: white;
+  border-radius: 1em;
+  height: .20em;
+}
+
+.m-progress{
+  font-size: 4em;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  line-height: normal;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: .25em;
+  font-family: 'Satoshi-Bold';
+}
+
+.mission-threatlvl{
+  width: 7em;
+  height: 2.5em;
+  position: relative;
+  border-radius: 107.057px;
+background: rgba(31, 31, 31, 0.26);
+}
+
+.miss-thlvl{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: .7em;
+  margin-block-start: 0;
+}
+
+.mission-details-3-det{
+  display: grid;
+  grid-template-rows: auto auto;
+  margin-left: 2em;
+}
+
+.mission-location-icon{
+  width: .75em;
+  margin-left: .5em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.mission-location-txt{
+  display: inline-block;
+  vertical-align: middle;
+  font-family: 'Satoshi-Regular';
+  color: #424242;
+  font-size: .7em;
+}
+
+.mission-location-3{
+  width: auto;
+}

@@ -215,7 +215,7 @@ func main() {
 				session.Set("code", Agent.Code)
 				session.Set("level", Agent.Level)
 				session.Save()
-				c.Redirect(http.StatusTemporaryRedirect, "/")
+				c.Redirect(http.StatusFound, "/")
 			} else {
 				c.JSON(http.StatusExpectationFailed, gin.H{"error": "Invalid password"})
 			}
