@@ -481,7 +481,13 @@ background: rgba(21, 21, 21, 0.00);
   vertical-align: middle;
   opacity: 40%;
   margin-left: 1em;
+  cursor: pointer;
   margin-top: .3em;
+  transition: all .4s ease-in-out;
+}
+
+.file-del:hover{
+  opacity: 70%;
 }
 
 .files{
@@ -514,6 +520,11 @@ background: rgba(21, 21, 21, 0.00);
   margin-left: .5em;
   font-family: 'Satoshi-Light';
   font-weight: 300;
+  width: 10em;
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: normal;
+  text-overflow: ellipsis;
   display: inline-block;vertical-align: middle;
 }
 
@@ -1637,3 +1648,9 @@ height: 6em;
   top: 1em;
   z-index: 210;
 }
+
+a{
+  color: inherit;
+  text-decoration: none;
+}
+

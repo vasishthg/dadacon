@@ -2,10 +2,12 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -33,19 +35,77 @@ func main() {
 			c.Redirect(http.StatusTemporaryRedirect, "/login")
 			return
 		}
-		// agent := struct {
-		// 	ID       int    `json:"id"`
-		// 	Name     string `json:"name"`
-		// 	Alias    string `json:"alias"`
-		// 	password string `json:"password"`
-		// 	pfp      string `json:"pfp"`
-		// 	files    string `json:"files"`
-		// 	missions string `json:"missions"`
-		// 	code     string `json:"code"`
-		// 	level    int    `json:"level"`
-		// }
-		c.HTML(http.StatusOK, "index.html", gin.H{})
+		type agent struct {
+			ID       int    `json:"id"`
+			Name     string `json:"name"`
+			Alias    string `json:"alias"`
+			Pfp      string `json:"pfp"`
+			Files    []byte `json:"files"`
+			Missions []byte `json:"missions"`
+			Code     string `json:"code"`
+			Level    int    `json:"level"`
+		}
+		Agent := agent{}
+		err := db.QueryRow("SELECT id, name, alias, pfp, files, missions, code, level FROM agent WHERE id = ?", session.Get("ID")).Scan(&Agent.ID, &Agent.Name, &Agent.Alias, &Agent.Pfp, &Agent.Files, &Agent.Missions, &Agent.Code, &Agent.Level)
+		if err != nil {
+			fmt.Println(err)
+		}
+		var fileNames []string
+		if err := json.Unmarshal(Agent.Files, &fileNames); err != nil {
+			fmt.Println(err)
+		}
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"agent":     Agent,
+			"fileNames": fileNames,
+		})
 	})
+	router.DELETE("/delete", func(c *gin.Context) {
+		filename := c.Query("filename")
+		if filename == "" {
+			c.String(http.StatusBadRequest, "Filename not provided")
+			return
+		}
+		filepath := "static/uploads/files/" + filename
+		err := os.Remove(filepath)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Error deleting file")
+			return
+		}
+		session := sessions.Default(c)
+		agentID := session.Get("ID")
+		var existingFilesJSON []byte
+		err = db.QueryRow("SELECT files FROM agent WHERE id = ?", agentID).Scan(&existingFilesJSON)
+		if err != nil && err != sql.ErrNoRows {
+			c.String(http.StatusInternalServerError, "Database error")
+			return
+		}
+		var existingFiles []string
+		if err := json.Unmarshal(existingFilesJSON, &existingFiles); err != nil {
+			c.String(http.StatusInternalServerError, "Error decoding JSON")
+			return
+		}
+		var updatedFiles []string
+		for _, f := range existingFiles {
+			if f != filename {
+				updatedFiles = append(updatedFiles, f)
+			}
+		}
+		updatedFilesJSON, err := json.Marshal(updatedFiles)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Error creating JSON")
+			return
+		}
+
+		_, err = db.Exec("UPDATE agent SET files = ? WHERE id = ?", updatedFilesJSON, agentID)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Database error")
+			return
+		}
+
+		c.String(http.StatusOK, "File deleted successfully")
+		c.String(http.StatusOK, "'%s' deleted", filename)
+	})
+
 	router.GET("/chat", func(c *gin.Context) {
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
@@ -153,19 +213,45 @@ func main() {
 		}
 	})
 	router.POST("/upload", func(c *gin.Context) {
-		file, _ := c.FormFile("file")
+		file, err := c.FormFile("file")
 		if err != nil {
-			fmt.Println(err)
+			c.String(http.StatusBadRequest, "Bad request")
+			return
 		}
-		log.Println(file.Filename)
 		session := sessions.Default(c)
-		c.SaveUploadedFile(file, "/static/uploads/files/"+file.Filename)
-		files = []
-		_, err := db.Exec("UPDATE agent SET files = ? WHERE id = ?", file.Filename, session.Get("ID"))
+		filepath := "static/uploads/files/" + file.Filename
+		err = c.SaveUploadedFile(file, filepath)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error saving file:", err)
+			c.String(http.StatusInternalServerError, "Error saving file")
+			return
 		}
-		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+		var existingFilesJSON []byte
+		err = db.QueryRow("SELECT files FROM agent WHERE id = ?", session.Get("ID")).Scan(&existingFilesJSON)
+		if err != nil && err != sql.ErrNoRows {
+			c.String(http.StatusInternalServerError, "Database error")
+			return
+		}
+		var existingFiles []string
+		if existingFilesJSON != nil {
+			err = json.Unmarshal(existingFilesJSON, &existingFiles)
+			if err != nil {
+				c.String(http.StatusInternalServerError, "Error decoding JSON")
+				return
+			}
+		}
+		existingFiles = append(existingFiles, file.Filename)
+		updatedFilesJSON, err := json.Marshal(existingFiles)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Error creating JSON")
+			return
+		}
+		_, err = db.Exec("UPDATE agent SET files = ? WHERE id = ?", updatedFilesJSON, session.Get("ID"))
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Database error")
+			return
+		}
+		c.String(http.StatusOK, fmt.Sprintf("Uploaded '%s'", file.Filename))
 	})
 
 	router.POST("/check/cipher", func(c *gin.Context) {

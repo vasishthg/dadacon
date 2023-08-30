@@ -70,7 +70,7 @@
               <p id="training-title">TRAINING</p>
             </div>
             <div class="training-level">
-              <p id="training-level">4</p>
+              <p id="training-level">{{ .agent.Level }}</p>
             </div>
             <div class="training-modules">
               <center>
@@ -94,64 +94,28 @@
               </div>
               <div class="file-actions">
                 <img src="/static/assets/icons/grid.svg" class="file-action" alt="">
-                <img src="/static/assets/icons/addfile.svg" class="file-action" alt="">
+                <form enctype="multipart/form-data" style="display: inline-block; vertical-align: middle;">
+                  <label for="upload-file">
+                      <img src="/static/assets/icons/addfile.svg" class="file-action" alt="">
+                  </label>
+                  <input type="file" name="upload-file" id="upload-file" hidden onchange="uploadFile()">
+              </form>
               </div>
             </div>
             <div class="files">
-              <div class="file-main">
+              {{ range .fileNames }}
+              <div class="file-main" style="cursor: pointer;">
+                <a href="/static/uploads/files/{{.}}" target="_blank">
                 <div class="file-details">
                   <div class="file-info">
                     <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
-                    <p class="dash-filename">filename.mp3</p>
+                    <p class="dash-filename">{{ . }}</p>
                   </div>
                 </div>
-                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
+              </a>
+                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="" onclick="deleteFile('{{ . }}')">
               </div>
-              <div class="file-main">
-                <div class="file-details">
-                  <div class="file-info">
-                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
-                    <p class="dash-filename">filename.mp3</p>
-                  </div>
-                </div>
-                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
-              </div>
-              <div class="file-main">
-                <div class="file-details">
-                  <div class="file-info">
-                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
-                    <p class="dash-filename">filename.mp3</p>
-                  </div>
-                </div>
-                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
-              </div>
-              <div class="file-main">
-                <div class="file-details">
-                  <div class="file-info">
-                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
-                    <p class="dash-filename">filename.mp3</p>
-                  </div>
-                </div>
-                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
-              </div>
-              <div class="file-main">
-                <div class="file-details">
-                  <div class="file-info">
-                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
-                    <p class="dash-filename">filename.mp3</p>
-                  </div>
-                </div>
-                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
-              </div>
-              <div class="file-main">
-                <div class="file-details">
-                  <div class="file-info">
-                    <img src="/static//assets/icons/mp3.svg" class="dash-fileicon" alt="">
-                    <p class="dash-filename">filename.mp3</p>
-                  </div>
-                </div>
-                <img src="/static/assets/icons/file-del.svg" class="file-del" alt="">
-              </div>
+              {{end}}
             </div>
           </div>
           <div class="dash-missionss">
@@ -211,7 +175,74 @@
 
     </div>
 </body>
-</html>
+</html><div class="success-cipher">
+  <p id="sc-title"> </p>
+</div>
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
 <script src="/static/main.js"></script>
+<script>
+    function uploadFile() {
+        var input = document.getElementById("upload-file");
+        var file = input.files[0];
+        var formData = new FormData();
+        formData.append("file", file);
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(result => {
+          setTimeout(function(){
+                            $(".success-cipher").fadeIn(500);
+                            $("#sc-title").text(result)
+                            setTimeout(function(){
+                                $(".success-cipher").fadeOut();
+                            }, 4000)
+                        })
+            console.log(result);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            setTimeout(function(){
+                            $(".success-cipher").fadeIn(500);
+                            $("#sc-title").text(error.statusText)
+                            setTimeout(function(){
+                                $(".success-cipher").fadeOut();
+                            }, 4000)
+                        })
+        });
+
+        input.value = "";
+    }
+    function deleteFile(filename) {
+        if (confirm("Are you sure you want to delete '" + filename + "'?")) {
+            var deleteUrl = "/delete?filename=" + encodeURIComponent(filename);
+            fetch(deleteUrl, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(result => {
+              setTimeout(function(){
+                            $(".success-cipher").fadeIn(500);
+                            $("#sc-title").text(result)
+                            setTimeout(function(){
+                                $(".success-cipher").fadeOut();
+                            }, 4000)
+                        })
+                console.log(result);
+            })
+            .catch(error => {
+              setTimeout(function(){
+                            $(".success-cipher").fadeIn(500);
+                            $("#sc-title").text(error.statusText)
+                            setTimeout(function(){
+                                $(".success-cipher").fadeOut();
+                            }, 4000)
+                        })
+                console.error('Error:', error);
+              });
+        }
+    }
+</script>
