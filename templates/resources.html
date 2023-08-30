@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probe / Resources</title>
+    <link rel="shortcut icon" href="/static/assets/icons/favn.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="loading">
+    <div class="load"></div>
+  </div>
+  <div class="bg"></div>
+  <div class="dash-menu">
+    <div class="dash-links">
+      <div class="dash-link goto-home">
+        <img src="/static/assets/icons/dash-home.svg" class="dash-link-img" alt="">
+      </div>
+      <div class="dash-link goto-chat">
+        <img src="/static/assets/icons/dash-chat.svg" class="dash-link-img" alt="">
+      </div>
+      <div class="dash-link goto-cipher">
+        <img src="/static/assets/icons/dash-cipher.svg" class="dash-link-img" alt="">
+      </div>
+      <div class="dash-link active goto-resources">
+        <img src="/static/assets/icons/dash-resources.svg" class="dash-link-img" alt="">
+      </div>
+      <div class="dash-link goto-map">
+        <img src="/static/assets/icons/dash-map.svg" class="dash-link-img" alt="">
+      </div>
+      <div class="dash-link goto-request">
+        <img src="/static/assets/icons/dash-request.svg" class="dash-link-img" alt="">
+      </div>
+    </div>
+    <div class="dash-profile">
+      <img src="/static/uploads/user/6e9687170161081.6459572c39744.jpg" class="profile-img" alt="">
+    </div>
+  </div>
+    <div class="dashboard" >
+      <div class="dash-section-one">
+        <div class="dash-title"><p id="dash-title">Dashboard / Resouces</p></div>
+        <div class="dash-actions">
+          <div class="actns">
+            <div class="dash-search">
+              <div id="dash-search-icon">
+                <img src="/static/assets/icons/search.svg" class="dash-search-img" alt="">
+              </div>
+              <input type="text" placeholder="Type something..." id="search-input">
+            </div>
+            <div class="dash-time">
+              <div id="dash-time">
+                <img src="/static/assets/icons/time.svg" id="dash-time-icon" alt="">
+                <p id="dash-time-txt"></p>
+              </div>
+            </div>
+            <div class="dash-alert" onclick="Alert()">
+                <img src="/static/assets/icons/alert.svg" class="actions-img" alt="">
+            </div>
+            <div class="dash-notif">
+              <img src="/static/assets/icons/notification.svg" class="actions-img" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="resources">
+        <br><br><br>
+        <div id="resource-container">
+            <div class="resourcess">
+                <div class="resource"></div>
+                <div class="resource scn"></div>
+                <div class="resource focus" id="focus"></div>
+                <div class="resource scn"></div>
+                <div class="resource"></div>
+            </div>
+        </div>
+    </div>
+    <div class="resource-controls">
+        <div class="resource-navig">
+            <img src="/static/assets/icons/arow.svg" class="resource-navsyd" alt="">
+        </div>
+        <center>
+            <div class="acess-code">
+                <input type="text" placeholder="access code" class="a-input">
+            </div>
+        </center>
+        <div class="resource-navsydd">
+            <img src="/static/assets/icons/arow.svg" class="resource-navsyd" alt="">
+        </div>
+    </div>
+
+    </div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+<script src="/static/main.js"></script>
+
+<script>
+  function scrollToCenter() {
+    const scrollingDiv = document.querySelector('.resources');
+    const divWidth = scrollingDiv.offsetWidth;
+    const scrollableWidth = scrollingDiv.scrollWidth;
+    const centerPosition = (scrollableWidth - divWidth) / 2;
+    
+    scrollingDiv.scrollLeft = centerPosition;
+  }
+  
+  scrollToCenter(); 
+</script>
