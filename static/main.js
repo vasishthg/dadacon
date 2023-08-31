@@ -184,4 +184,53 @@ $(".mission-viewmore").click(function(){
 $(".fbg").click(function(){
     $(".missions-fullscreen").fadeOut()
 })
+
+$(".rkkclose").click(function(){
+    $(".req-missions").fadeOut()
+})
+
+$(".qwiejqwioee").click(function(){
+    $(".req-missions").fadeIn()
+})
 setInterval(myFunction, 100); 
+
+const missionCards = document.querySelectorAll('.dash-mission');
+const prevButton = document.querySelector('#m-prev-btn');
+const nextButton = document.querySelector('#m-next-btn');
+
+let currentMissionIndex = 0;
+
+function showMission(index) {
+    missionCards.forEach((card, i) => {
+        card.style.display = i === index ? 'block' : 'none';
+    });
+}
+
+function prevMission() {
+    currentMissionIndex = (currentMissionIndex - 1 + missionCards.length) % missionCards.length;
+    showMission(currentMissionIndex);
+}
+
+function nextMission() {
+    currentMissionIndex = (currentMissionIndex + 1) % missionCards.length;
+    showMission(currentMissionIndex);
+}
+
+prevButton.addEventListener('click', prevMission);
+nextButton.addEventListener('click', nextMission);
+
+// Show the first mission card initially
+showMission(currentMissionIndex);
+$(`req-mission-{{id}}`).click(function(){
+    const missionId = this.id.replace('req-mission-', ''); // Extract the ID from the element ID
+    $.ajax({
+        url: `/request/mission/${missionID}`,
+        type: "POST",
+        success: function(response) {
+            console.log(response)
+        },
+        error: function(error) {
+            console.log(error)
+        }
+    })
+})

@@ -120,43 +120,46 @@
           </div>
           <div class="dash-missionss">
             <div class="dash-missions">
-              <button class="missions-navbtn">
+              <button class="missions-navbtn" id="m-prev-btn">
                 <img src="/static/assets/icons/arow.svg" class="mission-navbtn" alt="">
               </button>
-              <div class="dash-mission">
-                <div id="mission-top">
-                  <div class="mission-title">
-                    <p id="mission-title">On Going Missions</p>
-                    <!-- <img src="/static/assets/icons/addfile.svg" id="reqmision-btn" alt=""> -->
-                  </div>
-                  <div class="mission-details">
-                    <br><br>
-                    <div class="mission-details-1">
-                      <div class="m-align">
-                        <div class="m-details">
-                          <p class="mission-details-title">MELTDOWN</p>
-                          <img src="/static/assets/tr.png" class="mission-agent-img" alt="">
-                          <img src="/static/assets/tr.png" class="m-agent-collaborator" alt="">
-                        </div>
-                        <div class="m-bio-div">
-                          <p class="m-bio">Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem ipsum dol Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem or sit amet.or sit amet.</p>
+              <div class="missions-container">
+                <div class="dash-mission">
+                {{if .agentMissions}}
+                {{range .agentMissions}}
+                  <div id="mission-top">
+                    <div class="mission-title">
+                      <p class="systum-mission-title">On Going Missions</p>
+                    </div>
+                    <div class="mission-details">
+                      <br><br>
+                      <div class="mission-details-1">
+                        <div class="m-align">
+                          <div class="m-details">
+                            <p class="mission-details-title">{{.Title}}</p>
+                            <img src="/static/assets/tr.png" class="mission-agent-img" alt="">
+                            <img src="/static/assets/tr.png" class="m-agent-collaborator" alt="">
+                          </div>
+                          <div class="m-bio-div">
+                            <p class="m-bio">{{.Description}}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="mission-details-2">
-                      <div class="m-align">
-                        <div class="mission-steps">
-                          <div class="mission-step">
-                            <div class="mission-step-check"></div>
-                            <p class="mission-step-step">extraction</p>
-                          </div>
-                          <div class="mission-step">
-                            <div class="mission-step-check checked"></div>
-                            <p class="mission-step-step">information gathering</p>
-                          </div>
-                          <div class="mission-step">
-                            <div class="mission-step-check"></div>
-                            <p class="mission-step-step">uploading files</p>
+                      <div class="mission-details-2">
+                        <div class="m-align">
+                          <div class="mission-steps">
+                            <div class="mission-step">
+                              <div class="mission-step-check"></div>
+                              <p class="mission-step-step">{{.S1}}</p>
+                            </div>
+                            <div class="mission-step">
+                              <div class="mission-step-check checked"></div>
+                              <p class="mission-step-step">{{.S2}}</p>
+                            </div>
+                            <div class="mission-step">
+                              <div class="mission-step-check"></div>
+                              <p class="mission-step-step">{{.S3}}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -164,8 +167,19 @@
                   </div>
                   <button class="mission-viewmore">More details</button>
                 </div>
+                  {{end}}
+                  {{else}}
+                  <p style="position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  font-family: 'Satoshi-Bold';
+                  transform: translate(-50%, -50%);">NO MISSIONS</p>
+                  <button class="mission-viewmore">Add Mission</button>
+                </div>
+                {{end}}
               </div>
-              <button class="missions-navbtn">
+              
+              <button class="missions-navbtn" id="m-next-btn">
                 <img src="/static/assets/icons/arow.svg" style="rotate: 180deg;" class="mission-navbtn" alt="">
               </button>
             </div>
@@ -181,68 +195,79 @@
           <button class="missions-navbtn-full">
             <img src="/static/assets/icons/arow.svg" class="mission-navbtn-full" alt="">
           </button>
-          <div class="dash-mission-full">
-            <div id="mission-top-full">
-              <div class="mission-title-full">
-                <p id="mission-title-full">On Going Missions</p>
-                <!-- <img src="/static/assets/icons/addfile.svg" id="reqmision-btn" alt=""> -->
+          <div class="missions-container">
+
+            <div class="dash-mission-full">
+              <div id="mission-top-full">
+                <div class="mission-title-full">
+                  <p class="systum-mission-title-full">On Going Missions</p>
+                  <!-- <img src="/static/assets/icons/addfile.svg" id="reqmision-btn" alt=""> -->
+                </div>
+                <div class="mission-details-full">
+                  <br><br>
+                  <div class="full-mission-details-1">
+                    <div class="m-align-full">
+                      <div class="m-details-full">
+                        <p class="mission-details-title-full">MELTDOWN</p>
+                        <img src="/static/assets/tr.png" class="mission-agent-img-full" alt="">
+                        <img src="/static/assets/tr.png" class="m-agent-collaborator-full" alt="">
+                      </div>
+                      <div class="m-bio-div-full">
+                        <p class="m-bio-full">Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem ipsum dol Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem or sit amet.or sit amet.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mission-details-2-full">
+                    <div class="m-align-full">
+                      <div class="mission-steps-full">
+                        <div class="mission-step-full">
+                          <div class="mission-step-check-full"></div>
+                          <p class="mission-step-step-full">extraction</p>
+                        </div>
+                        <div class="mission-step-full">
+                          <div class="mission-step-check-full checked"></div>
+                          <p class="mission-step-step-full">information gathering</p>
+                        </div>
+                        <div class="mission-step-full">
+                          <div class="mission-step-check-full"></div>
+                          <p class="mission-step-step-full">uploading files</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mission-details-3-full">
+                      <div class="mission-details-3-time">
+                          <img src="/static/assets/icons/timee.svg" class="md-3-time" alt="">
+                          <p class="md-3-time-txt">23 Jul</p>
+                      </div>
+                      <div class="mission-details-3-prog">
+                        <div class="md-3-sys">
+                          <p class="md-3-title">Progress</p>
+                          <progress max="100" value="42" class="progressbar"></progress>
+                        </div>
+                        <p class="m-progress">42</p>
+                      </div> 
+                      <div class="mission-details-3-det">
+                        <div class="mission-threatlvl">
+                          <p class="miss-thlvl">Low Threat</p>
+                        </div>
+                        <div class="mission-location-3">
+                          <img src="/static/assets/icons/location.svg" class="mission-location-icon" alt="">
+                          <p class="mission-location-txt">Los Angeles, CA</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="req-missions">
+                    <p class="rkkclose">X</p>
+                    {{ range .missions }}
+                    <div class="req-mission" id="req-mission-{{.ID}}">
+                      <p class="req-mission-title">{{.Title}}</p>
+                    </div>
+                    {{end}}
+                  </div>
+                  <button class="qwiejqwioee">Add missions</button>
               </div>
-              <div class="mission-details-full">
-                <br><br>
-                <div class="full-mission-details-1">
-                  <div class="m-align-full">
-                    <div class="m-details-full">
-                      <p class="mission-details-title-full">MELTDOWN</p>
-                      <img src="/static/assets/tr.png" class="mission-agent-img-full" alt="">
-                      <img src="/static/assets/tr.png" class="m-agent-collaborator-full" alt="">
-                    </div>
-                    <div class="m-bio-div-full">
-                      <p class="m-bio-full">Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem ipsum dol Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem or sit amet.or sit amet.</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="mission-details-2-full">
-                  <div class="m-align-full">
-                    <div class="mission-steps-full">
-                      <div class="mission-step-full">
-                        <div class="mission-step-check-full"></div>
-                        <p class="mission-step-step-full">extraction</p>
-                      </div>
-                      <div class="mission-step-full">
-                        <div class="mission-step-check-full checked"></div>
-                        <p class="mission-step-step-full">information gathering</p>
-                      </div>
-                      <div class="mission-step-full">
-                        <div class="mission-step-check-full"></div>
-                        <p class="mission-step-step-full">uploading files</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mission-details-3-full">
-                    <div class="mission-details-3-time">
-                        <img src="/static/assets/icons/timee.svg" class="md-3-time" alt="">
-                        <p class="md-3-time-txt">23 Jul</p>
-                    </div>
-                    <div class="mission-details-3-prog">
-                      <div class="md-3-sys">
-                        <p class="md-3-title">Progress</p>
-                        <progress max="100" value="42" class="progressbar"></progress>
-                      </div>
-                      <p class="m-progress">42</p>
-                    </div> 
-                    <div class="mission-details-3-det">
-                      <div class="mission-threatlvl">
-                        <p class="miss-thlvl">Low Threat</p>
-                      </div>
-                      <div class="mission-location-3">
-                        <img src="/static/assets/icons/location.svg" class="mission-location-icon" alt="">
-                        <p class="mission-location-txt">Los Angeles, CA</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button class="qwiejqwioee">Add missions</button>
             </div>
           </div>
           <button class="missions-navbtn-full">
@@ -251,6 +276,7 @@
         </div>
       </div>
     </div>
+    
 </body>
 </html><div class="success-cipher">
   <p id="sc-title"> </p>

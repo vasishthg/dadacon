@@ -544,6 +544,7 @@ background: rgba(21, 21, 21, 0.00);
 .missions-navbtn{
   height: 26.3em;
   border-radius: 10em;
+  cursor: pointer;
   position: relative;border: 0.1px solid #2b2b2b;
   background: #0F0F0F;
   backdrop-filter: blur(31.548269271850586px);
@@ -557,6 +558,8 @@ background: rgba(21, 21, 21, 0.00);
 .dash-mission{
   border: 0.1px solid #2b2b2b;
 background: #0F0F0F;
+width: auto;
+height: 100%;
 border-radius: 1.5em;
 backdrop-filter: blur(31.548269271850586px)
 }
@@ -572,7 +575,7 @@ transform: translateX(-50%);
 margin-top: 1em;
 }
 
-#mission-title{
+.systum-mission-title{
   text-align: center;
   font-size: .7em;
   margin-top:1.25em;
@@ -781,6 +784,15 @@ html{
   top: 50%;
   margin-left: 2em;
   transform: translateY(-50%);
+}
+
+.missions-container{
+  position: relative;
+  height: 100%;
+  width:auto;
+}
+*{
+  outline: none !important;
 }
 .mission-viewmore{
   border-radius: 58.887px;
@@ -1672,10 +1684,10 @@ a{
   backdrop-filter: blur(8px);
   left: 0;
   top: 0;
-  display: none;
   right: 0;
   bottom: 0;
   z-index: 50;
+  display: none;
 }
 
 
@@ -1711,6 +1723,7 @@ a{
 .missions-navbtn-full{
   height: 40em;
   border-radius: 10em;
+  cursor: pointer;
   position: relative;border: 0.1px solid #2b2b2b;
   background: #0f0f0f;
   backdrop-filter: blur(31.548269271850586px);
@@ -1724,6 +1737,7 @@ a{
 .dash-mission-full{
   border: 0.1px solid #2b2b2b;
 background: #0f0f0f;
+height: 100%;
 border-radius: 1.5em;
 backdrop-filter: blur(31.548269271850586px)
 }
@@ -1739,7 +1753,7 @@ transform: translateX(-50%);
 margin-top: 1em;
 }
 
-#mission-title-full{
+.systum-mission-title-full{
   text-align: center;
   font-size: .7em;
   margin-top:1.25em;
@@ -1998,4 +2012,47 @@ background: rgba(31, 31, 31, 0.26);
   outline: none;
   color: white;
   font-family: 'Satoshi-Medium';
+}
+
+.missions-reqqq{
+  position: absolute;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.21);
+}
+
+.req-missions{
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.474);
+  color: white;
+  width: 10em;
+  display: none;
+  height: auto;
+  filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.282));
+  padding: 1.5em 1em 1.5em 1em;
+  bottom: 3em;
+  right: 1em;
+  border-radius: 1em;
+}
+
+.req-mission{
+  transition: 1s ease all;
+  padding-top: .15em;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 1em;
+  padding-bottom: .15em; 
+  background-color: transparent;
+}
+
+.req-mission:hover{
+  background-color: rgba(255, 255, 255, 0.21);
+}
+
+
+.rkkclose{
+  position: absolute;
+  font-family: 'Satoshi-Bold';
+  right: 1em;
+  cursor: pointer;
+  top: 0;
 }
