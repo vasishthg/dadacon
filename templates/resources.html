@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <div class="notifs">
+    <div class="fbgggg"></div>
+    <div class="notifs-main">
+      <p class="notifs-title">Notifications</p>
+      <div class="notifs-container">
+        <div class="notifs-containerr">
+          {{range .notifs}}
+          <div class="notif {{if .Unread}} unread{{else}} not-unread{{end}}">
+            <p class="notif-title">{{.Title}}</p>
+            <p class="notif-desc">{{.Desc}}</p>
+          </div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="loading">
     <div class="load"></div>
   </div>
@@ -67,24 +83,25 @@
         <br><br><br>
         <div id="resource-container">
             <div class="resourcess">
-                <div class="resource"></div>
-                <div class="resource scn"></div>
-                <div class="resource focus" id="focus"></div>
-                <div class="resource scn"></div>
-                <div class="resource"></div>
+              {{range .resources}}
+                <div class="resource" id="resource-file-{{.ID}}">
+                  <img src="/static/assets/icons/resource.svg" class="resource-icon" alt="">
+                  <p class="resource-name">{{.Name}}</p>
+                </div>
+              {{end}}
             </div>
         </div>
     </div>
     <div class="resource-controls">
-        <div class="resource-navig">
-            <img src="/static/assets/icons/arow.svg" class="resource-navsyd" alt="">
+        <div class="resource-navig" id="left-btn">
+            <img src="/static/assets/icons/arow.svg"  class="resource-navsyd" alt="">
         </div>
         <center>
             <div class="acess-code">
-                <input type="text" placeholder="access code" class="a-input">
+                <input type="text" onchange="checkCode()" placeholder="access code" class="a-input">
             </div>
         </center>
-        <div class="resource-navsydd">
+        <div class="resource-navsydd" id="right-btn" >
             <img src="/static/assets/icons/arow.svg" class="resource-navsyd" alt="">
         </div>
     </div>
@@ -107,4 +124,13 @@
   }
   
   scrollToCenter(); 
+  const container = document.querySelector('.resources');
+  $("#left-btn").click(function(){
+    container.scrollLeft -= 200;
+  })
+  $("#right-btn").click(function(){
+    container.scrollLeft += 200;
+  })
+  
+  
 </script>

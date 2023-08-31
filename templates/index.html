@@ -37,6 +37,23 @@
       <img src="/static/uploads/user/6e9687170161081.6459572c39744.jpg" class="profile-img" alt="">
     </div>
   </div>
+  <div class="notifs">
+    <div class="fbgggg"></div>
+    <div class="notifs-main">
+      <p class="notifs-title">Notifications</p>
+      <div class="notifs-container">
+        <div class="notifs-containerr">
+          {{range .notifs}}
+          <div class="notif {{if .Unread}} unread{{else}} not-unread{{end}}">
+            <p class="notif-title">{{.Title}}</p>
+            <p class="notif-desc">{{.Desc}}</p>
+          </div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
     <div class="dashboard">
       <div class="dash-section-one">
         <div class="dash-title"><p id="dash-title">Dashboard / Systummmm</p></div>
@@ -57,7 +74,7 @@
             <div class="dash-alert" onclick="Alert()">
                 <img src="/static/assets/icons/alert.svg" class="actions-img" alt="">
             </div>
-            <div class="dash-notif">
+            <div class="dash-notif" >
               <img src="/static/assets/icons/notification.svg" class="actions-img" alt="">
             </div>
           </div>

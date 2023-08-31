@@ -47,6 +47,14 @@ type notif struct {
 	Title  string `json:"title"`
 	Desc   string `json:"desc"`
 	Readby []byte `json:"readby"`
+	Unread bool   `json:"unread"`
+}
+
+type resource struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	File string `json:"file"`
+	Code string `json:"code"`
 }
 
 func main() {
@@ -115,8 +123,7 @@ func main() {
 				availableMissions = append(availableMissions, allMission)
 			}
 		}
-
-		_, err = db.Query("SELECT id, title, desc, readby FROM notif")
+		rows, err = db.Query("SELECT id, title, `desc`, readby FROM notifications")
 		if err != nil {
 			log.Println(err)
 		}
@@ -131,21 +138,25 @@ func main() {
 			}
 			notifs = append(notifs, Notif)
 		}
+		fmt.Println(notifs)
 
 		var unreadNotifs []notif
 		for _, n := range notifs {
-			var readbyIDs []int
-			err := json.Unmarshal([]byte(n.Readby), &readbyIDs)
-			if err != nil {
-				log.Println(err)
-				continue
-			}
+			if n.Readby != nil { // Assuming Readby is a []byte field
+				var readbyIDs []int
+				err := json.Unmarshal(n.Readby, &readbyIDs)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
 
-			if !slices.Contains(readbyIDs, Agent.ID) {
-				unreadNotifs = append(unreadNotifs, n)
+				if !slices.Contains(readbyIDs, Agent.ID) {
+					n.Unread = true
+					unreadNotifs = append(unreadNotifs, n)
+				}
 			}
 		}
-		fmt.Println(unreadNotifs)
+
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"agent":             Agent,
 			"fileNames":         fileNames,
@@ -155,6 +166,56 @@ func main() {
 			"notifs":            notifs,
 			"unreadNotifs":      unreadNotifs,
 		})
+	})
+
+	router.POST("/notification/read", func(c *gin.Context) {
+		session := sessions.Default(c)
+		fmt.Println(session.Get("loggedin"))
+		if session.Get("loggedin") != true {
+			c.Redirect(http.StatusTemporaryRedirect, "/login")
+			return
+		}
+		Agent := agent{}
+		err := db.QueryRow("SELECT id, name, alias, pfp, files, missions, code, level FROM agent WHERE id = ?", session.Get("ID")).Scan(&Agent.ID, &Agent.Name, &Agent.Alias, &Agent.Pfp, &Agent.Files, &Agent.Missions, &Agent.Code, &Agent.Level)
+		if err != nil {
+			fmt.Println(err)
+		}
+		rows, err := db.Query("SELECT id, readby FROM notifications")
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var id int
+			var readby []byte
+			err := rows.Scan(&id, &readby)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+
+			var readbyIDs []int
+			err = json.Unmarshal(readby, &readbyIDs)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+
+			if !slices.Contains(readbyIDs, Agent.ID) {
+				readbyIDs = append(readbyIDs, Agent.ID)
+				updatedReadbyJSON, err := json.Marshal(readbyIDs)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+
+				_, err = db.Exec("UPDATE notifications SET readby = ? WHERE id = ?", updatedReadbyJSON, id)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+		}
 	})
 
 	router.POST("/notification/mayday", func(c *gin.Context) {
@@ -172,9 +233,9 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		notification := "Mayday! Mayday! Mayday! Agent " + Agent.Alias + " is in danger! Location: " + "https://www.google.com/maps/dir/?api=1&destination=" + c.PostForm("lat") + "," + c.PostForm("lng")
+		notification := "Mayday! Mayday! Mayday! Agent " + "`" + Agent.Alias + "`" + " is in danger! Location: " + "https://www.google.com/maps/dir/?api=1&destination=" + c.PostForm("lat") + "," + c.PostForm("lng")
 		fmt.Print("INSERT INTO notifications (title, desc) VALUES (?, ?, ?)", "Mayday!", notification)
-		_, err = db.Exec("INSERT INTO `notifications` (title, `desc`) VALUES(?, ?)", "Mayday!", notification)
+		_, err = db.Exec("INSERT INTO `notifications` (title, `desc`, readby) VALUES(?, ?, ?)", "Mayday!", notification, []byte("[]"))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -326,8 +387,26 @@ func main() {
 			c.Redirect(http.StatusTemporaryRedirect, "/login")
 			return
 		}
+		rows, err := db.Query("SELECT id, name, file, file FROM resources")
+		if err != nil {
+			log.Println(err)
+		}
+		defer rows.Close()
 
-		c.HTML(http.StatusOK, "resources.html", gin.H{})
+		var resources []resource
+		for rows.Next() {
+			var Resource resource
+			err := rows.Scan(&Resource.ID, &Resource.Name, &Resource.File, &Resource.Code)
+			if err != nil {
+				log.Println(err)
+			}
+			resources = append(resources, Resource)
+		}
+		fmt.Println(resources)
+
+		c.HTML(http.StatusOK, "resources.html", gin.H{
+			"resources": resources,
+		})
 	})
 
 	router.GET("/request", func(c *gin.Context) {
@@ -482,6 +561,23 @@ func main() {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"code": processedContent})
+	})
+
+	router.POST("/resource/checkcode", func(c *gin.Context) {
+		id := c.PostForm("id")
+		code := c.PostForm("code")
+		Resource := resource{}
+		err := db.QueryRow("SELECT id, name, file, code FROM resources WHERE id = ?", id).Scan(&Resource.ID, &Resource.Name, &Resource.File, &Resource.Code)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if Resource.Code == code {
+			c.JSON(http.StatusOK, gin.H{"data": true})
+		} else {
+			c.JSON(http.StatusConflict, gin.H{"error": "Invalid code"})
+			return
+		}
+
 	})
 
 	router.Run(":5500")

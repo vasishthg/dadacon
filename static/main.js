@@ -7,7 +7,41 @@ const myFunction = () => {
     $("#dash-time-txt").text(time);
 
 };
-
+var selectedResouce = "none";
+$(".resource").click(function(){
+    const rid = $(this).attr("id").split("-")[2];
+    selectedResouce = rid;
+    $(".resource").removeClass("focus")
+    $(this).addClass("focus")
+})
+function checkCode(){
+    console.log(selectedResouce)
+    if (selectedResouce === "none"){
+        alert("Please select a resource")
+    }else{
+    const code = $(".a-input").val();
+    const id = selectedResouce;
+    $.ajax({
+      url: "/resource/checkcode",
+      type: "POST",
+      data: {
+        id: id,
+        code: code
+      },
+      success: function(data){
+        if(data == "true"){
+          window.location.href = "/";
+        }else{
+          console.log("Wrong access code");
+        }
+      },
+        error: function(error){
+            console.log(error)
+        }
+        
+    })
+  }
+    }
 $(".goto-chat").click(function(){
         $(".loading").fadeIn();
     setTimeout(function(){
@@ -184,6 +218,9 @@ $(".mission-viewmore").click(function(){
 $(".fbg").click(function(){
     $(".missions-fullscreen").fadeOut()
 })
+$(".fbgggg").click(function(){
+    $(".notifs").fadeOut()
+})
 
 $(".rkkclose").click(function(){
     $(".req-missions").fadeOut()
@@ -290,3 +327,18 @@ function systumPeSystum(){
         console.error("Geolocation is not supported by this browser.");
       }
 }
+
+$(".dash-notif").click(function(){
+    $(".notifs").fadeIn(300)
+    $.ajax({
+        url: "/notification/read",
+        type: "POST",
+        success: function(response) {
+            console.log(response)
+        },
+        error: function(error) {
+            console.log(error)
+        }
+    })
+})
+

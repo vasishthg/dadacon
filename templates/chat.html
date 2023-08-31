@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <div class="notifs">
+    <div class="fbgggg"></div>
+    <div class="notifs-main">
+      <p class="notifs-title">Notifications</p>
+      <div class="notifs-container">
+        <div class="notifs-containerr">
+          {{range .notifs}}
+          <div class="notif {{if .Unread}} unread{{else}} not-unread{{end}}">
+            <p class="notif-title">{{.Title}}</p>
+            <p class="notif-desc">{{.Desc}}</p>
+          </div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="loading">
     <div class="load"></div>
   </div>
