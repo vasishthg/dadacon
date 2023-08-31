@@ -566,15 +566,16 @@ func main() {
 	router.POST("/resource/checkcode", func(c *gin.Context) {
 		id := c.PostForm("id")
 		code := c.PostForm("code")
+		fmt.Println(id, code)
 		Resource := resource{}
 		err := db.QueryRow("SELECT id, name, file, code FROM resources WHERE id = ?", id).Scan(&Resource.ID, &Resource.Name, &Resource.File, &Resource.Code)
 		if err != nil {
 			fmt.Println(err)
 		}
 		if Resource.Code == code {
-			c.JSON(http.StatusOK, gin.H{"data": true})
+			c.JSON(http.StatusOK, gin.H{"url": Resource.File, "data": "true"})
 		} else {
-			c.JSON(http.StatusConflict, gin.H{"error": "Invalid code"})
+			c.JSON(http.StatusOK, gin.H{"data": "false"})
 			return
 		}
 

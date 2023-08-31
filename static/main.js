@@ -9,8 +9,9 @@ const myFunction = () => {
 };
 var selectedResouce = "none";
 $(".resource").click(function(){
-    const rid = $(this).attr("id").split("-")[2];
+    const rid = this.id.replace("resource-file-", "")
     selectedResouce = rid;
+    console.log(selectedResouce)
     $(".resource").removeClass("focus")
     $(this).addClass("focus")
 })
@@ -22,23 +23,27 @@ function checkCode(){
     const code = $(".a-input").val();
     const id = selectedResouce;
     $.ajax({
-      url: "/resource/checkcode",
-      type: "POST",
-      data: {
-        id: id,
-        code: code
-      },
-      success: function(data){
-        if(data == "true"){
-          window.location.href = "/";
+        url: "/resource/checkcode",
+        type: "POST",
+        data: {
+            id: id,
+            code: code
+        },
+        success: function(data){
+            console.log(id, code)
+            if(data.data == "true"){
+                console.log("Correct access code");
+          console.log(data)
+          $(`#resource-file-${selectedResouce}`).attr("onclick", `window.open('/static/uploads/files/${data.url}')`)
         }else{
           console.log("Wrong access code");
+          console.log(data)
         }
       },
         error: function(error){
             console.log(error)
         }
-        
+
     })
   }
     }
