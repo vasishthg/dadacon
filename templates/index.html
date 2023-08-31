@@ -124,9 +124,9 @@
                 <img src="/static/assets/icons/arow.svg" class="mission-navbtn" alt="">
               </button>
               <div class="missions-container">
-                <div class="dash-mission">
                 {{if .agentMissions}}
                 {{range .agentMissions}}
+                <div class="dash-mission">
                   <div id="mission-top">
                     <div class="mission-title">
                       <p class="systum-mission-title">On Going Missions</p>
@@ -164,16 +164,26 @@
                         </div>
                       </div>
                     </div>
+                   
                   </div>
                   <button class="mission-viewmore">More details</button>
                 </div>
-                  {{end}}
-                  {{else}}
-                  <p style="position: absolute;
-                  top: 50%;
+                {{end}}
+                {{else}}
+                <div class="dash-mission">
+                  <div id="mission-top">
+                    <div class="mission-title">
+                      <p class="systum-mission-title">On Going Missions</p>
+                    </div>
+                    
+                    <p style="position: absolute;
+
+top: 50%;
                   left: 50%;
                   font-family: 'Satoshi-Bold';
                   transform: translate(-50%, -50%);">NO MISSIONS</p>
+                   
+                  </div>
                   <button class="mission-viewmore">Add Mission</button>
                 </div>
                 {{end}}
@@ -192,28 +202,28 @@
       <div class="fbg"></div>
       <div class="dash-missionss-full">
         <div class="dash-missions-full">
-          <button class="missions-navbtn-full">
+          <button class="missions-navbtn-full" id="m-prev-btn-full">
             <img src="/static/assets/icons/arow.svg" class="mission-navbtn-full" alt="">
           </button>
           <div class="missions-container">
-
+            {{if .agentMissions}}
+            {{range .agentMissions}}
             <div class="dash-mission-full">
               <div id="mission-top-full">
                 <div class="mission-title-full">
                   <p class="systum-mission-title-full">On Going Missions</p>
-                  <!-- <img src="/static/assets/icons/addfile.svg" id="reqmision-btn" alt=""> -->
                 </div>
                 <div class="mission-details-full">
                   <br><br>
                   <div class="full-mission-details-1">
                     <div class="m-align-full">
                       <div class="m-details-full">
-                        <p class="mission-details-title-full">MELTDOWN</p>
+                        <p class="mission-details-title-full">{{.Title}}</p>
                         <img src="/static/assets/tr.png" class="mission-agent-img-full" alt="">
                         <img src="/static/assets/tr.png" class="m-agent-collaborator-full" alt="">
                       </div>
                       <div class="m-bio-div-full">
-                        <p class="m-bio-full">Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem ipsum dol Lorem ipsum dolor sit amet consectetur. A morbi aliquet augue nunc. Nec faucibus in Lorem or sit amet.or sit amet.</p>
+                        <p class="m-bio-full">{{.Description}}</p>
                       </div>
                     </div>
                   </div>
@@ -222,15 +232,15 @@
                       <div class="mission-steps-full">
                         <div class="mission-step-full">
                           <div class="mission-step-check-full"></div>
-                          <p class="mission-step-step-full">extraction</p>
+                          <p class="mission-step-step-full">{{.S1}}</p>
                         </div>
                         <div class="mission-step-full">
                           <div class="mission-step-check-full checked"></div>
-                          <p class="mission-step-step-full">information gathering</p>
+                          <p class="mission-step-step-full">{{.S2}}</p>
                         </div>
                         <div class="mission-step-full">
                           <div class="mission-step-check-full"></div>
-                          <p class="mission-step-step-full">uploading files</p>
+                          <p class="mission-step-step-full">{{.S3}}</p>
                         </div>
                       </div>
                     </div>
@@ -238,7 +248,7 @@
                   <div class="mission-details-3-full">
                       <div class="mission-details-3-time">
                           <img src="/static/assets/icons/timee.svg" class="md-3-time" alt="">
-                          <p class="md-3-time-txt">23 Jul</p>
+                          <p class="md-3-time-txt">{{ .Remaining }}</p>
                       </div>
                       <div class="mission-details-3-prog">
                         <div class="md-3-sys">
@@ -249,28 +259,55 @@
                       </div> 
                       <div class="mission-details-3-det">
                         <div class="mission-threatlvl">
-                          <p class="miss-thlvl">Low Threat</p>
+                          <p class="miss-thlvl">{{.Threat}} Threat</p>
                         </div>
                         <div class="mission-location-3">
                           <img src="/static/assets/icons/location.svg" class="mission-location-icon" alt="">
-                          <p class="mission-location-txt">Los Angeles, CA</p>
+                          <p class="mission-location-txt">{{.Location}}</p>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <button class="qwiejqwioee">Add missions</button>
+                </div>
+                
+              </div>
+                {{end}}
+                <div class="req-missions">
+                  <p class="rkkclose">X</p>
+                  {{ range .availableMissions }}
+                  <div class="req-mission" id="req-mission-{{.ID}}">
+                    <p class="req-mission-title">{{.Title}}</p>
+                  </div>
+                  {{end}}
+                </div>
+            {{else}}
+            <div class="dash-mission-full">
+              <div id="mission-top-full">
+                <div class="mission-title-full">
+                  <p class="systum-mission-title-full">On Going Missions</p>
+                </div>
+                <p style="position: absolute;
+
+top: 50%;
+                  left: 50%;
+                  font-family: 'Satoshi-Bold';
+                  transform: translate(-50%, -50%);">NO MISSIONS</p>
                   <div class="req-missions">
                     <p class="rkkclose">X</p>
-                    {{ range .missions }}
+                    {{ range .availableMissions }}
                     <div class="req-mission" id="req-mission-{{.ID}}">
                       <p class="req-mission-title">{{.Title}}</p>
                     </div>
                     {{end}}
                   </div>
                   <button class="qwiejqwioee">Add missions</button>
+                </div>
+                
               </div>
-            </div>
+            {{end}}
           </div>
-          <button class="missions-navbtn-full">
+          <button class="missions-navbtn-full" id="m-next-btn-full">
             <img src="/static/assets/icons/arow.svg" style="rotate: 180deg;" class="mission-navbtn-full" alt="">
           </button>
         </div>
@@ -348,4 +385,64 @@
               });
         }
     }
+    
+const missionCards = document.querySelectorAll('.dash-mission');
+const prevButton = document.querySelector('#m-prev-btn');
+const nextButton = document.querySelector('#m-next-btn');
+
+let currentMissionIndex = 0;
+
+function showMission(index) {
+    missionCards.forEach((card, i) => {
+        card.style.display = i === index ? 'block' : 'none';
+    });
+}
+
+function prevMission() {
+    currentMissionIndex = (currentMissionIndex - 1 + missionCards.length) % missionCards.length;
+    showMission(currentMissionIndex);
+}
+
+function nextMission() {
+    currentMissionIndex = (currentMissionIndex + 1) % missionCards.length;
+    showMission(currentMissionIndex);
+}
+
+prevButton.addEventListener('click', prevMission);
+nextButton.addEventListener('click', nextMission);
+
+showMission(currentMissionIndex);
+
+
+const missionCardsFull = document.querySelectorAll('.dash-mission-full');
+const prevButtonFull = document.querySelector('#m-prev-btn-full');
+const nextButtonFull = document.querySelector('#m-next-btn-full');
+
+let currentMissionIndexFull = 0;
+
+function showMissionFull(index) {
+    missionCardsFull.forEach((cardFull, i) => {
+        cardFull.style.display = i === index ? 'block' : 'none';
+    });
+}
+
+function prevMissionFull() {
+    currentMissionIndexFull = (currentMissionIndexFull - 1 + missionCardsFull.length) % missionCardsFull.length;
+    showMissionFull(currentMissionIndex);
+}
+
+function nextMissionFull() {
+    currentMissionIndexFull = (currentMissionIndexFull + 1) % missionCardsFull.length;
+    showMissionFull(currentMissionIndexFull);
+}
+
+prevButtonFull.addEventListener('click', prevMissionFull);
+nextButtonFull.addEventListener('click', nextMissionFull);
+
+showMissionFull(currentMissionIndexFull);
+
+</script>
+
+<script>
+  
 </script>

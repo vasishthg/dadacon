@@ -1353,6 +1353,7 @@ background: rgba(63, 63, 63, 0.26);;
   height: 1em;
   border-radius: 50%;
   display: inline-block;
+  cursor: pointer;
   margin-left: 1em;
   vertical-align: middle;
   background-color: #1e1e1e;
@@ -1391,6 +1392,11 @@ background: #101010;
 width: 100%;
 border: #424242 0.3px solid;
 height: 15em;
+transition: all .5s ease;
+}
+.req-backup:hover{
+  cursor: pointer;
+  background-color: #232323a6;
 }
 
 .req-amt{
@@ -1738,6 +1744,7 @@ a{
   border: 0.1px solid #2b2b2b;
 background: #0f0f0f;
 height: 100%;
+width: auto;
 border-radius: 1.5em;
 backdrop-filter: blur(31.548269271850586px)
 }
@@ -1990,12 +1997,12 @@ background: rgba(31, 31, 31, 0.26);
   display: inline-block;
   vertical-align: middle;
   font-family: 'Satoshi-Regular';
-  color: #424242;
+  color: #b2b2b2;
   font-size: .7em;
 }
 
 .mission-location-3{
-  width: auto;
+  width: 12em;
 }
 
 .qwiejqwioee{
@@ -2040,6 +2047,7 @@ background: rgba(31, 31, 31, 0.26);
   padding-left: 1em;
   padding-right: 1em;
   border-radius: 1em;
+  cursor: pointer;
   padding-bottom: .15em; 
   background-color: transparent;
 }
@@ -2055,4 +2063,8 @@ background: rgba(31, 31, 31, 0.26);
   right: 1em;
   cursor: pointer;
   top: 0;
+}
+
+#req-plus, #req-minus{
+  user-select: none;
 }

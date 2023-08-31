@@ -194,43 +194,99 @@ $(".qwiejqwioee").click(function(){
 })
 setInterval(myFunction, 100); 
 
-const missionCards = document.querySelectorAll('.dash-mission');
-const prevButton = document.querySelector('#m-prev-btn');
-const nextButton = document.querySelector('#m-next-btn');
-
-let currentMissionIndex = 0;
-
-function showMission(index) {
-    missionCards.forEach((card, i) => {
-        card.style.display = i === index ? 'block' : 'none';
-    });
-}
-
-function prevMission() {
-    currentMissionIndex = (currentMissionIndex - 1 + missionCards.length) % missionCards.length;
-    showMission(currentMissionIndex);
-}
-
-function nextMission() {
-    currentMissionIndex = (currentMissionIndex + 1) % missionCards.length;
-    showMission(currentMissionIndex);
-}
-
-prevButton.addEventListener('click', prevMission);
-nextButton.addEventListener('click', nextMission);
-
-// Show the first mission card initially
-showMission(currentMissionIndex);
-$(`req-mission-{{id}}`).click(function(){
-    const missionId = this.id.replace('req-mission-', ''); // Extract the ID from the element ID
+$('.req-mission').click(function(){
+    const missionId = this.id.replace('req-mission-', ''); 
     $.ajax({
-        url: `/request/mission/${missionID}`,
+        url: `/request/mission/${missionId}`,
         type: "POST",
         success: function(response) {
-            console.log(response)
+            setTimeout(function(){
+                $(".success-cipher").fadeIn(500);
+                $("#sc-title").text(`Added mission`)
+                setTimeout(function(){
+                    $(".success-cipher").fadeOut();
+                }, 4000)
+                console.log(response)
+            })
         },
         error: function(error) {
-            console.log(error)
+                setTimeout(function(){
+                    $(".success-cipher").fadeIn(500);
+                    $("#sc-title").text(`error ${error.responseJSON.error}`)
+                    setTimeout(function(){
+                        $(".success-cipher").fadeOut();
+                    }, 4000)
+                })
+                console.log(error)
         }
-    })
+    });
+});
+var reqAmt = 4;
+$("#req-plus").click(function(){
+    if (reqAmt > 9){
+        reqAmt =9;
+    }
+    reqAmt++;
+    $("#req-amt").text(reqAmt)
 })
+$("#req-minus").click(function(){
+    if (reqAmt < 2){
+        reqAmt = 2;
+    }
+    reqAmt--;
+    $("#req-amt").text(reqAmt)
+})
+var reqUrgency
+$(".req-step-check").click(function(){
+    reqUrgency = (this.id)
+    var $this = $(this);
+    $(".req-step-check").animate({
+        backgroundColor: "#1e1e1e"
+    }, 300)
+    setTimeout(function(){
+
+        $(".req-step-check").removeClass("checked");
+    }, 400)
+    $this.animate({
+        backgroundColor: "#c1c1c1"
+    }, 300)
+    setTimeout(function(){
+        $this.addClass("checked")
+    }, 400)
+})
+console.log(reqUrgency)
+
+function systumPeSystum(){
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+      
+            console.log(`Latitude: ${lat}, longitude: ${lng}`);
+            if (confirm("Activate mayday? Your access will be revoked to prevent compromise")){
+                $.ajax({
+                    url: "/notification/mayday",
+                    type: "POST",
+                    data: {
+                        lat: lat,
+                        lng: lng
+                    },
+                    success: function(response) {
+                        console.log(response)
+                        window.location.href = "/"
+                    },
+                    error: function(error) {
+                        console.log(error)
+                    }
+                })
+            }
+          },
+          (error) => {
+            console.error("Error getting user location:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+}

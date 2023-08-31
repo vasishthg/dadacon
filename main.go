@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-
+	"slices"
 	"strconv"
 	"strings"
 
@@ -16,6 +16,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/xyproto/randomstring"
 )
 
 type agent struct {
@@ -41,6 +42,12 @@ type missions struct {
 	Agents      []byte `json:"agents"`
 	Location    string `json:"location"`
 }
+type notif struct {
+	ID     int    `json:"id"`
+	Title  string `json:"title"`
+	Desc   string `json:"desc"`
+	Readby []byte `json:"readby"`
+}
 
 func main() {
 	router := gin.Default()
@@ -53,6 +60,7 @@ func main() {
 		log.Fatal("err connecting to db:", err)
 	}
 	defer db.Close()
+
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
@@ -60,7 +68,6 @@ func main() {
 			c.Redirect(http.StatusTemporaryRedirect, "/login")
 			return
 		}
-
 		Agent := agent{}
 		err := db.QueryRow("SELECT id, name, alias, pfp, files, missions, code, level FROM agent WHERE id = ?", session.Get("ID")).Scan(&Agent.ID, &Agent.Name, &Agent.Alias, &Agent.Pfp, &Agent.Files, &Agent.Missions, &Agent.Code, &Agent.Level)
 		if err != nil {
@@ -70,15 +77,11 @@ func main() {
 		if err := json.Unmarshal(Agent.Files, &fileNames); err != nil {
 			fmt.Println(err)
 		}
-
 		var missionIDs []int
 		if err := json.Unmarshal(Agent.Missions, &missionIDs); err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(missionIDs)
-
 		var systum []missions
-
 		for _, missionID := range missionIDs {
 			row := db.QueryRow("SELECT id, title, description, progress, threat, remaining, s1, s2, s3, agents, location FROM missions WHERE id=?", missionID)
 
@@ -91,8 +94,6 @@ func main() {
 
 			systum = append(systum, Mission)
 		}
-		fmt.Println(systum)
-
 		rows, err := db.Query("SELECT id, title, description, progress, threat, remaining, s1, s2, s3, agents, location FROM missions")
 		if err != nil {
 			log.Println(err)
@@ -108,20 +109,124 @@ func main() {
 			allMissions = append(allMissions, Mission)
 
 		}
+		var availableMissions []missions
+		for _, allMission := range allMissions {
+			if !slices.Contains(missionIDs, allMission.ID) {
+				availableMissions = append(availableMissions, allMission)
+			}
+		}
 
+		_, err = db.Query("SELECT id, title, desc, readby FROM notif")
+		if err != nil {
+			log.Println(err)
+		}
+		defer rows.Close()
+
+		var notifs []notif
+		for rows.Next() {
+			var Notif notif
+			err := rows.Scan(&Notif.ID, &Notif.Title, &Notif.Desc, &Notif.Readby)
+			if err != nil {
+				log.Println(err)
+			}
+			notifs = append(notifs, Notif)
+		}
+
+		var unreadNotifs []notif
+		for _, n := range notifs {
+			var readbyIDs []int
+			err := json.Unmarshal([]byte(n.Readby), &readbyIDs)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			if !slices.Contains(readbyIDs, Agent.ID) {
+				unreadNotifs = append(unreadNotifs, n)
+			}
+		}
+		fmt.Println(unreadNotifs)
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"agent":         Agent,
-			"fileNames":     fileNames,
-			"agentMissions": systum,
-			"missions":      allMissions,
+			"agent":             Agent,
+			"fileNames":         fileNames,
+			"agentMissions":     systum,
+			"missions":          allMissions,
+			"availableMissions": availableMissions,
+			"notifs":            notifs,
+			"unreadNotifs":      unreadNotifs,
 		})
 	})
+
+	router.POST("/notification/mayday", func(c *gin.Context) {
+
+		session := sessions.Default(c)
+		fmt.Println(session.Get("loggedin"))
+		if session.Get("loggedin") != true {
+			c.Redirect(http.StatusTemporaryRedirect, "/login")
+			return
+		}
+		// https://www.google.com/maps/dir/?api=1&destination=34.059808,-118.368152
+
+		Agent := agent{}
+		err := db.QueryRow("SELECT id, name, alias, pfp, files, missions, code, level FROM agent WHERE id = ?", session.Get("ID")).Scan(&Agent.ID, &Agent.Name, &Agent.Alias, &Agent.Pfp, &Agent.Files, &Agent.Missions, &Agent.Code, &Agent.Level)
+		if err != nil {
+			fmt.Println(err)
+		}
+		notification := "Mayday! Mayday! Mayday! Agent " + Agent.Alias + " is in danger! Location: " + "https://www.google.com/maps/dir/?api=1&destination=" + c.PostForm("lat") + "," + c.PostForm("lng")
+		fmt.Print("INSERT INTO notifications (title, desc) VALUES (?, ?, ?)", "Mayday!", notification)
+		_, err = db.Exec("INSERT INTO `notifications` (title, `desc`) VALUES(?, ?)", "Mayday!", notification)
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = db.Exec("UPDATE agent SET code = ? WHERE id = ?", randomstring.CookieFriendlyString(30), Agent.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		session.Clear()
+		session.Save()
+		c.JSON(http.StatusOK, gin.H{"notification": notification})
+	})
+
 	router.POST("/request/mission/:id", func(c *gin.Context) {
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
 		id := c.Param("id")
-		c.JSON(http.StatusOK, gin.H{"id": id})
+		agentID := session.Get("ID")
+		Agent := agent{}
+		err := db.QueryRow("SELECT missions FROM agent WHERE id = ?", agentID).Scan(&Agent.Missions)
+		if err != nil && err != sql.ErrNoRows {
+			c.String(http.StatusInternalServerError, "Database error")
+			return
+		}
+
+		var missionIDs []int
+		if err := json.Unmarshal(Agent.Missions, &missionIDs); err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(missionIDs)
+		newMissionID, err := strconv.Atoi(id)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if slices.Contains(missionIDs, newMissionID) {
+			c.JSON(http.StatusConflict, gin.H{"error": "Mission already added"})
+			return
+		} else {
+			missionIDs = append(missionIDs, newMissionID)
+		}
+		updatedMissions, err := json.Marshal(missionIDs)
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = db.Exec("UPDATE agent SET missions = ? WHERE id = ?", updatedMissions, agentID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		c.JSON(http.StatusOK, gin.H{"missionIDs": missionIDs})
 	})
+
 	router.DELETE("/delete", func(c *gin.Context) {
 		filename := c.Query("filename")
 		if filename == "" {
@@ -213,6 +318,7 @@ func main() {
 			return
 		}
 	})
+
 	router.GET("/resources", func(c *gin.Context) {
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
@@ -220,8 +326,10 @@ func main() {
 			c.Redirect(http.StatusTemporaryRedirect, "/login")
 			return
 		}
+
 		c.HTML(http.StatusOK, "resources.html", gin.H{})
 	})
+
 	router.GET("/request", func(c *gin.Context) {
 		session := sessions.Default(c)
 		fmt.Println(session.Get("loggedin"))
@@ -283,6 +391,7 @@ func main() {
 			}
 		}
 	})
+
 	router.POST("/upload", func(c *gin.Context) {
 		file, err := c.FormFile("file")
 		if err != nil {
@@ -325,34 +434,6 @@ func main() {
 		c.String(http.StatusOK, fmt.Sprintf("Uploaded '%s'", file.Filename))
 	})
 
-	router.POST("/mission/request", func(c *gin.Context) {
-		mission := c.PostForm("mission")
-		session := sessions.Default(c)
-		agentID := session.Get("ID")
-		var existingMissionsJSON []byte
-		err = db.QueryRow("SELECT missions FROM agent WHERE id = ?", agentID).Scan(&existingMissionsJSON)
-		if err != nil && err != sql.ErrNoRows {
-			c.String(http.StatusInternalServerError, "Database error")
-			return
-		}
-		var existingMissions []string
-		if err := json.Unmarshal(existingMissionsJSON, &existingMissions); err != nil {
-			c.String(http.StatusInternalServerError, "Error decoding JSON")
-			return
-		}
-		existingMissions = append(existingMissions, mission)
-		updatedMissionsJSON, err := json.Marshal(existingMissions)
-		if err != nil {
-			c.String(http.StatusInternalServerError, "Error creating JSON")
-			return
-		}
-		_, err = db.Exec("UPDATE agent SET missions = ? WHERE id = ?", updatedMissionsJSON, agentID)
-		if err != nil {
-			c.String(http.StatusInternalServerError, "Database error")
-			return
-		}
-		c.String(http.StatusOK, fmt.Sprintf("Mission '%s' added", mission))
-	})
 	router.POST("/check/cipher", func(c *gin.Context) {
 		file, err := c.FormFile("file")
 		if err != nil {
